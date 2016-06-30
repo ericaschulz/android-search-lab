@@ -2,17 +2,9 @@ package ly.generalassemb.drewmahrt.shoppinglistwithsearch;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
-import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Created by drewmahrt on 12/28/15.
@@ -41,6 +33,14 @@ public class ShoppingSQLiteOpenHelper extends SQLiteOpenHelper{
                     COL_ITEM_DESCRIPTION + " TEXT, " +
                     COL_ITEM_PRICE + " TEXT, " +
                     COL_ITEM_TYPE + " TEXT )";
+
+    private static ShoppingSQLiteOpenHelper instance;
+    public static ShoppingSQLiteOpenHelper getInstance(Context context) {
+        if(instance == null){
+            instance = new ShoppingSQLiteOpenHelper(context);
+        }
+        return instance;
+    }
 
 
     public ShoppingSQLiteOpenHelper(Context context) {
