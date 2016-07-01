@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
         dbSetup.getReadableDatabase();
 
-        mShoppingListView = (ListView)findViewById(R.id.shopping_list_view);
+        mShoppingListView = (ListView) findViewById(R.id.shopping_list_view);
 
         helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
 
         ShoppingSQLiteOpenHelper helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
         Cursor cursor = helper.getShoppingList();
 
-        mCursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,cursor,new String[]{ShoppingSQLiteOpenHelper.COL_ITEM_NAME},new int[]{android.R.id.text1},0);
+        mCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[]{ShoppingSQLiteOpenHelper.COL_ITEM_NAME}, new int[]{android.R.id.text1}, 0);
         mShoppingListView.setAdapter(mCursorAdapter);
 
 
@@ -45,23 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction()));
-        String query = intent.getStringExtra(SearchManager.QUERY);
-        //Toast.makeText(MainActivity.this, "Searching for: " + query, Toast.LENGTH_SHORT).show();
-
-        Cursor c = helper.searchShoppingList(query);
-        //TextView result = (TextView) findViewById(R.id.text_view);
-        //result.setText(query + c.moveToFirst());
-        mCursorAdapter.changeCursor(c);
-        mCursorAdapter.notifyDataSetChanged();
-
-    }
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -75,6 +58,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
 
+    }
 
-}
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+
+            Cursor c = helper.searchShoppingList(query);
+            mCursorAdapter.changeCursor(c);
+            mCursorAdapter.notifyDataSetChanged();
+
+        }
+
+        }
+    }
