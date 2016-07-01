@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
 
-        ShoppingSQLiteOpenHelper helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
+      //  ShoppingSQLiteOpenHelper helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
         Cursor cursor = helper.getShoppingList();
 
         mCursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[]{ShoppingSQLiteOpenHelper.COL_ITEM_NAME}, new int[]{android.R.id.text1}, 0);
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-
             Cursor c = helper.searchShoppingList(query);
             mCursorAdapter.changeCursor(c);
             mCursorAdapter.notifyDataSetChanged();
