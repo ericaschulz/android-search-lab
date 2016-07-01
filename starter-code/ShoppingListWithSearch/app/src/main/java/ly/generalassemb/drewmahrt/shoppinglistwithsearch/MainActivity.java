@@ -12,21 +12,19 @@ import android.view.MenuInflater;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import ly.generalassemb.drewmahrt.shoppinglistwithsearch.setup.DBAssetHelper;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mShoppingListView;
     private CursorAdapter mCursorAdapter;
+    private ShoppingSQLiteOpenHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        handleIntent(getIntent());
 
         //Ignore the two lines below, they are for setup
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
@@ -34,22 +32,29 @@ public class MainActivity extends AppCompatActivity {
 
         mShoppingListView = (ListView)findViewById(R.id.shopping_list_view);
 
+        helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
+
         ShoppingSQLiteOpenHelper helper = new ShoppingSQLiteOpenHelper(MainActivity.this);
         Cursor cursor = helper.getShoppingList();
 
         mCursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,cursor,new String[]{ShoppingSQLiteOpenHelper.COL_ITEM_NAME},new int[]{android.R.id.text1},0);
         mShoppingListView.setAdapter(mCursorAdapter);
 
+
+        handleIntent(getIntent());
+
     }
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction()));
         String query = intent.getStringExtra(SearchManager.QUERY);
-        Toast.makeText(MainActivity.this, "Searching for: " + query, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Searching for: " + query, Toast.LENGTH_SHORT).show();
 
-        Cursor c = ShoppingSQLiteOpenHelper.getInstance(MainActivity.this).getShoppingList();
-        TextView result = (TextView) findViewById(R.id.text_view);
-        result.setText(query + c.moveToFirst());
+        Cursor c = helper.searchShoppingList(query);
+        //TextView result = (TextView) findViewById(R.id.text_view);
+        //result.setText(query + c.moveToFirst());
+        mCursorAdapter.changeCursor(c);
+        mCursorAdapter.notifyDataSetChanged();
 
     }
     @Override
